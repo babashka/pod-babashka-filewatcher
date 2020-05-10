@@ -76,15 +76,18 @@ jobs:
           keys:
             - linux-{{ checksum "Cargo.lock" }}
       - run:
+          name: Install Clojure
+          command: |
+            script/install-clojure /usr/local
+      - run:
           name: Build binary
           command: |
-             cargo build --release
-          no_output_timeout: 10m
-      # - run:
-      #     name: Run tests
-      #     command: |
-      #       script/test
-      #       script/run_lib_tests
+            cargo build --release
+          no_output_timeout: 30m
+      - run:
+          name: Run tests
+          command: |
+            script/test
       - run:
           name: Release
           command: |
@@ -196,24 +199,19 @@ jobs:
             curl https://sh.rustup.rs -sSf -o install.sh
             chmod +x install.sh
             ./install.sh -y
-      # - run:
-      #     name: Install Clojure
-      #     command: |
-      #       script/install-clojure /usr/local
-      # - run:
-      #     name: Install Leiningen
-      #     command: |
-      #       script/install-leiningen
+      - run:
+          name: Install Clojure
+          command: |
+            script/install-clojure /usr/local
       - run:
           name: Build binary
           command: |
             cargo build --release
           no_output_timeout: 30m
-      # - run:
-      #     name: Run tests
-      #     command: |
-      #       script/test
-      #       script/run_lib_tests
+      - run:
+          name: Run tests
+          command: |
+            script/test
       - run:
           name: Release
           command: |
