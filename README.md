@@ -18,7 +18,7 @@ Run in [babashka](https://github.com/borkdude/babashka/) or using the
 
 ``` clojure
 (require '[babashka.pods :as pods])
-(pods/load-pod "target/release/pod-babashka-filewatcher")
+(pods/load-pod "pod-babashka-filewatcher")
 
 (require '[pod.babashka.filewatcher :as fw])
 
