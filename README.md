@@ -29,7 +29,6 @@ $ echo "foo" >> created_renamed.txt
 the following will be printed:
 
 ``` clojure
-;;=>
 {:path "/private/tmp/created.txt", :type "create"}
 {:path "/private/tmp/created.txt", :type "notice/remove"}
 {:dest "/private/tmp/created_renamed.txt", :path "/private/tmp/created.txt", :type "rename"}
@@ -38,3 +37,9 @@ the following will be printed:
 {:path "/private/tmp/created_renamed.txt", :type "notice/write"}
 {:path "/private/tmp/created_renamed.txt", :type "write"}
 ```
+
+## License
+
+Copyright © 2020 Michiel Borkent
+
+Distributed under the EPL License. See LICENSE.
