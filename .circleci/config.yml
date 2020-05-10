@@ -63,6 +63,7 @@ jobs:
       - image: circleci/rust
     working_directory: ~/repo
     environment:
+      - PLATFORM: linux
     resource_class: large
     steps:
       - checkout

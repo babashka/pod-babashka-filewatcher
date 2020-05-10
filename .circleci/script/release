@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VERSION=$(cargo pkgid | cut -d# -f2 | cut -d: -f2)
+
 rm -rf /tmp/release
 mkdir -p /tmp/release
 cp target/release/pod-babashka-filewatcher /tmp/release
@@ -8,7 +10,7 @@ cd /tmp/release
 
 ## release binary as zip archive
 
-zip "pod-babashka-filewatcher-$VERSION-$BABASHKA_PLATFORM-amd64.zip" pod-babashka-filewatcher
+zip "pod-babashka-filewatcher-$VERSION-$PLATFORM-amd64.zip" pod-babashka-filewatcher
 
 ## cleanup
 
