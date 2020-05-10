@@ -1,12 +1,13 @@
 # pod-babashka-filewatcher
 
-## Build
-
-```
-$ cargo build --release
-```
+A [babashka pod](https://github.com/borkdude/babashka/blob/master/doc/pods.md)
+for watching files. Implemented using the Rust
+[notify](https://github.com/notify-rs/notify) library.
 
 ## Run
+
+Run in [babashka](https://github.com/borkdude/babashka/) or using the
+[babashka.pods](https://github.com/babashka/babashka.pods) library on the JVM.
 
 ``` clojure
 (require '[babashka.pods :as pods])
@@ -40,6 +41,12 @@ the following will be printed:
 {:path "/private/tmp/created_renamed.txt", :type "chmod"}
 {:path "/private/tmp/created_renamed.txt", :type "notice/write"}
 {:path "/private/tmp/created_renamed.txt", :type "write"}
+```
+
+## Build
+
+```
+$ cargo build --release
 ```
 
 ## License
