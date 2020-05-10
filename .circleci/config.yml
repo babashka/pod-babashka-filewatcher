@@ -78,7 +78,11 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-8-jdk
+            sudo apt install -y wget gnupg software-properties-common
+            wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | sudo apt-key add -
+            sudo add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+            sudo apt update -y
+            sudo apt install adoptopenjdk-8-hotspot -y
             sudo script/install-clojure /usr/local
       - run:
           name: Build binary
