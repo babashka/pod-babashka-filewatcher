@@ -11,7 +11,11 @@ $ cargo build --release
 ``` clojure
 (require '[babashka.pods :as pods])
 (pods/load-pod "target/release/pod-babashka-filewatcher")
-(def chan (pod.babashka.filewatcher/watch "/tmp"))
+
+(require '[pod.babashka.filewatcher :as fw])
+
+(def chan (fw/watch "/tmp"))
+
 (require '[clojure.core.async :as async])
 (loop [] (prn (async/<!! chan)) (recur))
 ```
