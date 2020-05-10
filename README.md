@@ -1,6 +1,6 @@
 # pod-babashka-filewatcher
 
-## Compile
+## Build
 
 ```
 $ cargo build --release
