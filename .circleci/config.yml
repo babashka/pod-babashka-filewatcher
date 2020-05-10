@@ -274,7 +274,7 @@ workflows:
       # - jvm
       - linux
       # - linux-static
-      # - mac
+      - mac
       # - deploy:
       #     filters:
       #       branches:
