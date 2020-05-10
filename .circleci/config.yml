@@ -193,7 +193,9 @@ jobs:
       - run:
           name: Install rustup
           command: |
-            curl https://sh.rustup.rs -sSf | sh
+            curl https://sh.rustup.rs -sSf -o install.sh
+            chmod +x install.sh
+            ./install.sh -y
       # - run:
       #     name: Install Clojure
       #     command: |
