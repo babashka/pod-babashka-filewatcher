@@ -74,10 +74,11 @@ jobs:
             git submodule update
       - restore_cache:
           keys:
-            - linux-{{ checksum "Cargo.lock" }}
+            - linux-{{ checksum "Cargo.lock" }}-{{ checksum "deps.edn" }}
       - run:
           name: Install Clojure
           command: |
+            sudo apt-get update && sudo apt-get install java
             sudo script/install-clojure /usr/local
       - run:
           name: Build binary
@@ -97,7 +98,7 @@ jobs:
             - ~/.m2
             - target
             - /usr/local/cargo/registry
-          key: linux-{{ checksum "Cargo.lock" }}
+          key: linux-{{ checksum "Cargo.lock" }}-{{ checksum "deps.edn" }}
       - store_artifacts:
           path: /tmp/release
           destination: release
@@ -192,7 +193,7 @@ jobs:
             git submodule update
       - restore_cache:
           keys:
-            - mac-{{ checksum "Cargo.lock" }}
+            - mac-{{ checksum "Cargo.lock" }}-{{ checksum "deps.edn" }}
       - run:
           name: Install rustup
           command: |
@@ -221,7 +222,7 @@ jobs:
             - ~/.m2
             - target
             - /usr/local/cargo/registry
-          key: mac-{{ checksum "Cargo.lock" }}
+          key: mac-{{ checksum "Cargo.lock" }}-{{ checksum "deps.edn" }}
       - store_artifacts:
           path: /tmp/release
           destination: release
