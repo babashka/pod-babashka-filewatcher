@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            script/install-clojure /usr/local
+            sudo script/install-clojure /usr/local
       - run:
           name: Build binary
           command: |
@@ -202,7 +202,7 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            script/install-clojure /usr/local
+            sudo script/install-clojure /usr/local
       - run:
           name: Build binary
           command: |
