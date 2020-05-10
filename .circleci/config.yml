@@ -74,7 +74,7 @@ jobs:
             git submodule update
       - restore_cache:
           keys:
-            - linux-{{ checksum "Cargo.toml" }}
+            - linux-{{ checksum "Cargo.lock" }}
       - run:
           name: Build binary
           command: |
@@ -92,8 +92,9 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-ce-java8-19.3.1
-          key: linux-{{ checksum "Cargo.toml" }}
+            - target
+            - /usr/local/cargo/registry
+          key: linux-{{ checksum "Cargo.lock" }}
       - store_artifacts:
           path: /tmp/release
           destination: release
@@ -188,7 +189,7 @@ jobs:
             git submodule update
       - restore_cache:
           keys:
-            - mac-{{ checksum "Cargo.toml" }}
+            - mac-{{ checksum "Cargo.lock" }}
       - run:
           name: Install rustup
           command: |
@@ -218,8 +219,9 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-ce-java8-19.3.1
-          key: mac-{{ checksum "Cargo.toml" }}
+            - target
+            - /usr/local/cargo/registry
+          key: mac-{{ checksum "Cargo.lock" }}
       - store_artifacts:
           path: /tmp/release
           destination: release
