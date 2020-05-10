@@ -173,69 +173,60 @@ jobs:
   #         name: Publish artifact link to Slack
   #         command: |
   #           ./bb .circleci/script/publish_artifact.clj
-  # mac:
-  #   macos:
-  #     xcode: "9.0"
-  #   environment:
-  #     GRAALVM_HOME: /Users/distiller/graalvm-ce-java8-19.3.1/Contents/Home
-  #     BABASHKA_PLATFORM: macos # used in release script
-  #     BABASHKA_TEST_ENV: native
-  #     BABASHKA_XMX: "-J-Xmx7g"
-  #   resource_class: large
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: "Pull Submodules"
-  #         command: |
-  #           git submodule init
-  #           git submodule update
-  #     - restore_cache:
-  #         keys:
-  #           - mac-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
-  #     - run:
-  #         name: Install Clojure
-  #         command: |
-  #           script/install-clojure /usr/local
-  #     - run:
-  #         name: Install Leiningen
-  #         command: |
-  #           script/install-leiningen
-  #     - run:
-  #         name: Download GraalVM
-  #         command: |
-  #           cd ~
-  #           ls -la
-  #           if ! [ -d graalvm-ce-java8-19.3.1 ]; then
-  #             curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-19.3.1/graalvm-ce-java8-darwin-amd64-19.3.1.tar.gz
-  #             tar xzf graalvm-ce-java8-darwin-amd64-19.3.1.tar.gz
-  #           fi
-  #     - run:
-  #         name: Build binary
-  #         command: |
-  #           # script/uberjar
-  #           script/compile
-  #         no_output_timeout: 30m
-  #     # - run:
-  #     #     name: Run tests
-  #     #     command: |
-  #     #       script/test
-  #     #       script/run_lib_tests
-  #     - run:
-  #         name: Release
-  #         command: |
-  #           .circleci/script/release
-  #     - save_cache:
-  #         paths:
-  #           - ~/.m2
-  #           - ~/graalvm-ce-java8-19.3.1
-  #         key: mac-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
-  #     - store_artifacts:
-  #         path: /tmp/release
-  #         destination: release
-  #     # - run:
-  #     #     name: Publish artifact link to Slack
-  #     #     command: |
-  #     #       ./bb .circleci/script/publish_artifact.clj
+  mac:
+    macos:
+      xcode: "9.0"
+    environment:
+      PLATFORM: macos # used in release script
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: "Pull Submodules"
+          command: |
+            git submodule init
+            git submodule update
+      - restore_cache:
+          keys:
+            - mac-{{ checksum "Cargo.toml" }}
+      - run:
+          name: Install rustup
+          command: |
+            curl https://sh.rustup.rs -sSf | sh
+      # - run:
+      #     name: Install Clojure
+      #     command: |
+      #       script/install-clojure /usr/local
+      # - run:
+      #     name: Install Leiningen
+      #     command: |
+      #       script/install-leiningen
+      - run:
+          name: Build binary
+          command: |
+            cargo build --release
+          no_output_timeout: 30m
+      # - run:
+      #     name: Run tests
+      #     command: |
+      #       script/test
+      #       script/run_lib_tests
+      - run:
+          name: Release
+          command: |
+            .circleci/script/release
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/graalvm-ce-java8-19.3.1
+          key: mac-{{ checksum "Cargo.toml" }}
+      - store_artifacts:
+          path: /tmp/release
+          destination: release
+      # - run:
+      #     name: Publish artifact link to Slack
+      #     command: |
+      #       ./bb .circleci/script/publish_artifact.clj
   # deploy:
   #   resource_class: large
   #   docker:
