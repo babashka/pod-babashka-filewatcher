@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            sudo apt-get update && sudo apt-get install java
+            sudo apt-get update && sudo apt-get install openjdk-8-jdk
             sudo script/install-clojure /usr/local
       - run:
           name: Build binary
