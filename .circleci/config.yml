@@ -92,8 +92,7 @@ jobs:
           paths:
             - ~/.m2
             - ~/graalvm-ce-java8-19.3.1
-          keys:
-            - linux-{{ checksum "Cargo.toml" }}
+          key: linux-{{ checksum "Cargo.toml" }}
       - store_artifacts:
           path: /tmp/release
           destination: release
