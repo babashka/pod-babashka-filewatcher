@@ -52,8 +52,16 @@ the following will be printed:
 
 ## Build
 
-```
+``` shell
 $ cargo build --release
+```
+
+## Test
+
+Running tests requires [clojure](https://clojure.org/guides/getting_started).
+
+```
+$ script/test
 ```
 
 ## License
