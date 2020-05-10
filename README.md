@@ -4,6 +4,13 @@ A [babashka pod](https://github.com/borkdude/babashka/blob/master/doc/pods.md)
 for watching files. Implemented using the Rust
 [notify](https://github.com/notify-rs/notify) library.
 
+## Install
+
+The following installation methods are available:
+
+- Download a binary from Github releases
+- With [brew](https://brew.sh/): `brew install borkdude/brew/pod-babashka-filewatcher`
+
 ## Run
 
 Run in [babashka](https://github.com/borkdude/babashka/) or using the
