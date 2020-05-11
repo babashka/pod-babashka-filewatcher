@@ -12,6 +12,7 @@
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (fw/watch (.getPath tmp-dir))
         txt-file (io/file tmp-dir "foo.txt")]
+    (.delete txt-file)
     (loop [actions [#(spit txt-file "contents")
                     #(spit txt-file "contents" :append true)
                     #(.delete txt-file)
@@ -31,6 +32,7 @@
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (fw/watch (.getPath tmp-dir) {:delay-ms 0})
         txt-file (io/file tmp-dir "foo.txt")]
+    (.delete txt-file)
     (loop [actions [#(spit txt-file "contents")]
            events []]
       (if-let [action (first actions)]
