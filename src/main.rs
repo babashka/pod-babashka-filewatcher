@@ -15,8 +15,9 @@ use std::io::{Write, BufReader};
 
 use std::thread;
 
-use json;
 use serde_json as jsons;
+
+use serde::{Deserialize, Serialize};
 
 fn get_string(val: &bc::Value, key: &str) -> Option<String> {
     match val {
@@ -115,10 +116,12 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
     handle.flush().unwrap();
 }
 
-fn watch(id: String, path: String) {
+fn watch(id: String, path: String, opts: Opts) {
+    let delay_ms: u64 = opts.delay_ms.0;
+    //eprintln!("delay: {}", delay_ms);
     thread::spawn(move || {
         let (tx, rx) = channel();
-        let mut watcher = watcher(tx, Duration::from_secs(2)).unwrap();
+        let mut watcher = watcher(tx, Duration::from_millis(delay_ms)).unwrap();
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
         loop {
             match rx.recv() {
@@ -129,6 +132,21 @@ fn watch(id: String, path: String) {
             }
         }
     });
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DelayMs(u64);
+
+impl Default for DelayMs {
+    fn default() -> Self {
+        DelayMs(2000)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Opts {
+    #[serde(rename="delay-ms", default)]
+    delay_ms: DelayMs
 }
 
 fn handle_incoming(val: bc::Value) {
@@ -142,11 +160,21 @@ fn handle_incoming(val: bc::Value) {
             match &var[..] {
                 "pod.babashka.filewatcher/watch" => {
                     let args = get_string(&val, "args").unwrap();
-                    let args = json::parse(&args).unwrap();
-                    let path = &args[0];
-                    let path = path.as_str().unwrap().to_owned();
+                    //let args = json::parse(&args).unwrap();
+                    let mut args: Vec<jsons::Value> = jsons::from_str(&args).unwrap();
+                    let arg_count = args.len();
+                    // see https://stackoverflow.com/questions/27904864/what-does-cannot-move-out-of-index-of-mean
+                    let path: String = jsons::from_value(args.remove(0)).unwrap();
+                    let opts: Opts = {
+                        if arg_count == 2 {
+                            // we already removed one value, so the index has become 0
+                            jsons::from_value(args.remove(0)).unwrap()
+                        } else {
+                            Opts { delay_ms: Default::default() }
+                        }
+                    };
                     let id = get_string(&val, "id").unwrap();
-                    watch(id, path);
+                    watch(id, path.to_owned(), opts);
                 },
                 _ => panic!("Unknown var: {}", var)
             };

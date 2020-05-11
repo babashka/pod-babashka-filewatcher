@@ -22,7 +22,7 @@ Run in [babashka](https://github.com/borkdude/babashka/) or using the
 
 (require '[pod.babashka.filewatcher :as fw])
 
-(def chan (fw/watch "/tmp"))
+(def chan (fw/watch "/tmp" {:delay-ms 0}))
 
 (require '[clojure.core.async :as async])
 (loop [] (prn (async/<!! chan)) (recur))
