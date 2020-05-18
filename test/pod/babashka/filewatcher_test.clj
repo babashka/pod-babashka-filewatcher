@@ -26,7 +26,7 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (do (is (= "create" (first (map :type events))))
+        (do (is (contains? (set (map :type events)) "create" ))
             (is (every? #(str/ends-with? % "foo.txt")
                         (map :path events))))))))
 
