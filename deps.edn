@@ -6,7 +6,7 @@
      :sha "cb96e80f6f3d3b307c59cbeb49bb0dcb3a2a780b"}
     babashka.pods
     {:git/url "https://github.com/babashka/babashka.pods"
-     :sha "f5652b97494fbbb468cca9d0a5f5d4c4fc359f3b"}
+     :sha "70dacb4ec984d987646228f32ddfebd9da953336"}
     org.clojure/core.async
     {:mvn/version "1.1.587"}}
    :extra-paths ["test"]

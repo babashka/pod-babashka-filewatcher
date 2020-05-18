@@ -10,7 +10,9 @@
 
 (deftest filewatcher-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
-        chan (fw/watch (.getPath tmp-dir))
+        chan (async/chan)
+        cb (fn [result] (async/put! chan result))
+        _ (fw/watch (.getPath tmp-dir) cb)
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
     (loop [actions [#(spit txt-file "contents")
@@ -30,7 +32,9 @@
 
 (deftest filewatcher-opts-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
-        chan (fw/watch (.getPath tmp-dir) {:delay-ms 0})
+        chan (async/chan)
+        cb (fn [result] (async/put! chan result))
+        _ (fw/watch (.getPath tmp-dir) cb {:delay-ms 0})
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
     (loop [actions [#(spit txt-file "contents")]

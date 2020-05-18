@@ -47,13 +47,15 @@ fn write_describe_map() {
     let var_map = insert(var_map, "name", "watch");
 
     let watch_fn = "
-(defn watch [path cb]
-  (:result
-    (babashka.pods/invoke \"pod.babashka.filewatcher\"
-      'pod.babashka.filewatcher/watch*
-      [path]
-      {:on-success (fn [{:keys [:value]}] (cb value))
-       :on-error (fn [{:keys [:error]}] (prn error))})))
+(defn watch
+  ([path cb] (watch path cb {}))
+  ([path cb opts]
+    (:result
+      (babashka.pods/invoke \"pod.babashka.filewatcher\"
+        'pod.babashka.filewatcher/watch*
+        [path opts]
+        {:on-success (fn [{:keys [:value]}] (cb value))
+         :on-error (fn [{:keys [:error]}] (prn error))}))))
 ";
     let var_map = insert(var_map, "code", watch_fn);
     vars.push(Value::from(var_map));
