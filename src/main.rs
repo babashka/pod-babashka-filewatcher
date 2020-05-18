@@ -42,9 +42,27 @@ fn write_describe_map() {
     let mut namespace = insert(namespace, "name", "pod.babashka.filewatcher");
     let mut vars = Vec::new();
     let var_map = HashMap::new();
+
+    // watch
     let var_map = insert(var_map, "name", "watch");
-    let var_map = insert(var_map, "async", "true");
+
+    let watch_fn = "
+(defn watch [path cb]
+  (:result
+    (babashka.pods/invoke \"pod.babashka.filewatcher\"
+      'pod.babashka.filewatcher/watch*
+      [path]
+      {:on-success (fn [{:keys [:value]}] (cb value))
+       :on-error (fn [{:keys [:error]}] (prn error))})))
+";
+    let var_map = insert(var_map, "code", watch_fn);
     vars.push(Value::from(var_map));
+
+    // watch*
+    let var_map = HashMap::new();
+    let var_map = insert(var_map, "name", "watch*");
+    vars.push(Value::from(var_map));
+
     namespace.insert(Value::from("vars"),Value::List(vars));
     let describe_map = HashMap::new();
     let mut describe_map = insert(describe_map, "format", "json");
@@ -158,7 +176,7 @@ fn handle_incoming(val: bc::Value) {
         "invoke" => {
             let var = get_string(&val, "var").unwrap();
             match &var[..] {
-                "pod.babashka.filewatcher/watch" => {
+                "pod.babashka.filewatcher/watch*" => {
                     let args = get_string(&val, "args").unwrap();
                     //let args = json::parse(&args).unwrap();
                     let mut args: Vec<jsons::Value> = jsons::from_str(&args).unwrap();
