@@ -26,9 +26,8 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (do (is (contains? (set (map :type events)) "create" ))
-            (is (every? #(str/ends-with? % "foo.txt")
-                        (map :path events))))))))
+        (is (every? #(str/ends-with? % "foo.txt")
+                    (map :path events)))))))
 
 (deftest filewatcher-opts-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
