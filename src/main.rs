@@ -55,7 +55,9 @@ fn write_describe_map() {
         'pod.babashka.filewatcher/watch*
         [path opts]
         {:on-success (fn [{:keys [:value]}] (cb value))
-         :on-error (fn [{:keys [:error]}] (prn error))}))))
+         :on-error (fn [{:keys [:ex-message :ex-data]}]
+                     (binding [*out* *err*]
+                       (prn ex-message)))}))))
 ";
     let var_map = insert(var_map, "code", watch_fn);
     vars.push(Value::from(var_map));
