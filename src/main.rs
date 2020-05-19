@@ -56,7 +56,8 @@ fn write_describe_map() {
       {:on-success (fn [{:keys [:value :done]}] (cb value))
        :on-error (fn [{:keys [:ex-message :ex-data]}]
                    (binding [*out* *err*]
-                     (println \"ERROR:\" ex-message)))})))
+                     (println \"ERROR:\" ex-message)))})
+   nil))
 ";
     let var_map = insert(var_map, "code", watch_fn);
     vars.push(Value::from(var_map));
