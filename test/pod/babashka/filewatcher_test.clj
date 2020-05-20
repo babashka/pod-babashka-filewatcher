@@ -10,9 +10,11 @@
 
 (deftest filewatcher-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
-        chan (fw/watch (.getPath tmp-dir))
+        chan (async/chan)
+        cb (fn [result] (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
+    (fw/watch (.getPath tmp-dir) cb)
     (loop [actions [#(spit txt-file "contents")
                     #(spit txt-file "contents" :append true)
                     #(.delete txt-file)
@@ -24,15 +26,16 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (do (is (= "create" (first (map :type events))))
-            (is (every? #(str/ends-with? % "foo.txt")
-                        (map :path events))))))))
+        (is (every? #(str/ends-with? % "foo.txt")
+                    (map :path events)))))))
 
 (deftest filewatcher-opts-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
-        chan (fw/watch (.getPath tmp-dir) {:delay-ms 0})
+        chan (async/chan)
+        cb (fn [result] (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
+    (fw/watch (.getPath tmp-dir) cb {:delay-ms 0})
     (loop [actions [#(spit txt-file "contents")]
            events []]
       (if-let [action (first actions)]
