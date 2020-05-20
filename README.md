@@ -1,6 +1,6 @@
 # pod-babashka-filewatcher
 
-A [babashka pod](https://github.com/borkdude/babashka/blob/master/doc/pods.md)
+A [babashka pod](https://github.com/babashka/babashka.pods)
 for watching files. Implemented using the Rust
 [notify](https://github.com/notify-rs/notify) library.
 
