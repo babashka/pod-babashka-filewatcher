@@ -1,6 +1,6 @@
 [package]
 name = "pod-babashka-filewatcher"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 authors = ["Michiel Borkent <michielborkent@gmail.com>"]
 repository = "https://github.com/babashka/pod-babashka-filewatcher/"
 description = "A babashka pod for watching files"
