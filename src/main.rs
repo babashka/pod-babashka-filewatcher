@@ -9,6 +9,10 @@ use DebouncedEvent as ev;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
+#[macro_use]
+extern crate lazy_static;
+use std::sync::Mutex;
+
 use std::collections::HashMap;
 use std::io;
 use std::io::{Write, BufReader};
@@ -137,6 +141,11 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
     let mut handle = stdout.lock();
     handle.write_all(bencode.as_bytes()).unwrap();
     handle.flush().unwrap();
+}
+
+lazy_static! {
+    // Since it's mutable and shared, use mutext.
+    static ref STATES: Mutex<Vec<Box<dyn Watcher>>> = Mutex::new(vec![]);
 }
 
 fn watch(id: String, path: String, opts: Opts) {
