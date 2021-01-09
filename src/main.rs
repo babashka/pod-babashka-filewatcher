@@ -156,10 +156,11 @@ fn watch(id: String, path: String, opts: Opts) {
         let mut watcher = watcher(tx, Duration::from_millis(delay_ms)).unwrap();
         // Need to add watcher (or channel?) to global registry somehow...
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
-        //Mutex<Vec<Box<notify::fsevent::FsEventWatcher>>>
         let mut reg = REGISTRY.lock().unwrap();
         reg.push(Box::new(watcher));
-        eprintln!("amount of watchers: {}", reg.len());
+        // eprintln!("watchers: {}", reg.len());
+        // release lock:
+        drop(reg);
         loop {
             match rx.recv() {
                 Ok(v) => {

@@ -12,7 +12,7 @@
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (async/chan)
         cb (fn [result]
-             (prn :result-fw result)
+             ;; (prn :result-fw result)
              (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
@@ -28,15 +28,15 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (is (every? #(str/ends-with? % "foo.txt")
-                    (map :path events)))))
-    (prn :end)))
+        (do (is (every? #(str/ends-with? % "foo.txt")
+                        (map :path events)))
+            (prn :end-filewatcher-test))))))
 
 (deftest filewatcher-opts-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (async/chan)
         cb (fn [result]
-             (prn :result-opts result)
+             ;; (prn :result-opts result)
              (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
