@@ -159,6 +159,7 @@ fn watch(id: String, path: String, opts: Opts) {
         //Mutex<Vec<Box<notify::fsevent::FsEventWatcher>>>
         let mut reg = REGISTRY.lock().unwrap();
         reg.push(Box::new(watcher));
+        eprintln!("amount of watchers: {}", reg.len());
         loop {
             match rx.recv() {
                 Ok(v) => {

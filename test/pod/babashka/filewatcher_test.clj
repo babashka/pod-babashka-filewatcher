@@ -2,8 +2,8 @@
   (:require [babashka.pods :as pods]
             [clojure.core.async :as async]
             [clojure.java.io :as io]
-            [clojure.test :refer [deftest is]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.test :refer [deftest is]]))
 
 (pods/load-pod "target/release/pod-babashka-filewatcher")
 (require '[pod.babashka.filewatcher :as fw])
@@ -11,7 +11,9 @@
 (deftest filewatcher-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (async/chan)
-        cb (fn [result] (async/put! chan result))
+        cb (fn [result]
+             (prn :result-fw result)
+             (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
     (fw/watch (.getPath tmp-dir) cb)
@@ -27,12 +29,15 @@
             (recur (rest actions)
                    (conj events event))))
         (is (every? #(str/ends-with? % "foo.txt")
-                    (map :path events)))))))
+                    (map :path events)))))
+    (prn :end)))
 
 (deftest filewatcher-opts-test
   (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
         chan (async/chan)
-        cb (fn [result] (async/put! chan result))
+        cb (fn [result]
+             (prn :result-opts result)
+             (async/put! chan result))
         txt-file (io/file tmp-dir "foo.txt")]
     (.delete txt-file)
     (fw/watch (.getPath tmp-dir) cb {:delay-ms 0})
@@ -44,4 +49,5 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (is (pos? (count events)))))))
+        (is (pos? (count events)))))
+    (prn :end)))
