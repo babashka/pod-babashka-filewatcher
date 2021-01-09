@@ -145,7 +145,7 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
 }
 
 lazy_static! {
-    static ref REGISTRY: Arc<Mutex<Vec<Box<notify::RecommendedWatcher>>>> = Arc::new(Mutex::new(vec![]));
+    static ref REGISTRY: Arc<Mutex<Vec<notify::RecommendedWatcher>>> = Arc::new(Mutex::new(vec![]));
 }
 
 fn watch(id: String, path: String, opts: Opts) {
@@ -157,7 +157,7 @@ fn watch(id: String, path: String, opts: Opts) {
         // TODO: better error handling, e.g. permission denied
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
         let mut reg = REGISTRY.lock().unwrap();
-        reg.push(Box::new(watcher));
+        reg.push(watcher);
         // eprintln!("watchers: {}", reg.len());
         // release lock:
         drop(reg);
