@@ -154,7 +154,7 @@ fn watch(id: String, path: String, opts: Opts) {
     thread::spawn(move || {
         let (tx, rx) = channel();
         let mut watcher = watcher(tx, Duration::from_millis(delay_ms)).unwrap();
-        // Need to add watcher (or channel?) to global registry somehow...
+        // TODO: better error handling, e.g. permission denied
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
         let mut reg = REGISTRY.lock().unwrap();
         reg.push(Box::new(watcher));

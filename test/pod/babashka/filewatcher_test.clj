@@ -9,7 +9,7 @@
 (require '[pod.babashka.filewatcher :as fw])
 
 (deftest filewatcher-test
-  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
+  (let [tmp-dir (java.nio.file.Files/createTempDirectory "watch-1")
         chan (async/chan)
         cb (fn [result]
              ;; (prn :result-fw result)
@@ -33,7 +33,7 @@
             (prn :end-filewatcher-test))))))
 
 (deftest filewatcher-opts-test
-  (let [tmp-dir (io/file (System/getProperty "java.io.tmpdir"))
+  (let [tmp-dir (java.nio.file.Files/createTempDirectory "watch-2")
         chan (async/chan)
         cb (fn [result]
              ;; (prn :result-opts result)
