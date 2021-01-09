@@ -33,8 +33,9 @@
                    (cond-> events
                      event (conj event)))))
         (do nil (run! prn events)
-            (is (= 3 (count (filter #(str/ends-with? % "foo.txt")
-                                    (map :path events)))))
+            (is (>= (count (filter #(str/ends-with? % "foo.txt")
+                                   (map :path events)))
+                    3))
             (prn :end-filewatcher-test))))))
 
 (deftest filewatcher-opts-test
