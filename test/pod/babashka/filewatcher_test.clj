@@ -28,7 +28,7 @@
       (if-let [action (first actions)]
         (do
           (action)
-          (let [event (async/<!! chan)]
+          (let [[event _] (async/alts!! [(async/timeout 5000) chan])]
             (recur (rest actions)
                    (conj events event))))
         (do nil ;; (run! prn events)
