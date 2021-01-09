@@ -30,8 +30,9 @@
           (action)
           (let [[event _] (async/alts!! [(async/timeout 5000) chan])]
             (recur (rest actions)
-                   (conj events event))))
-        (do nil ;; (run! prn events)
+                   (cond-> events
+                     event (conj event)))))
+        (do nil (run! prn events)
             (is (= 3 (count (filter #(str/ends-with? % "foo.txt")
                                     (map :path events)))))
             (prn :end-filewatcher-test))))))
