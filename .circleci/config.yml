@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   linux:
     docker:
-      - image: circleci/rust
+      - image: circleci/ubuntu
     working_directory: ~/repo
     environment:
       - PLATFORM: linux
@@ -30,6 +30,10 @@ jobs:
             sudo apt update -y
             sudo apt install adoptopenjdk-8-hotspot -y
             sudo script/install-clojure /usr/local
+      - run:
+          name: Install Rust
+          command: |
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
       - run:
           name: Build binary
           command: |
@@ -71,9 +75,7 @@ jobs:
       - run:
           name: Install rustup
           command: |
-            curl https://sh.rustup.rs -sSf -o install.sh
-            chmod +x install.sh
-            ./install.sh -y
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
       - run:
           name: Install Clojure
           command: |
