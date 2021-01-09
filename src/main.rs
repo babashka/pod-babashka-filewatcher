@@ -11,7 +11,8 @@ use std::time::Duration;
 
 #[macro_use]
 extern crate lazy_static;
-use std::sync::Mutex;
+
+use std::sync::{Arc, Mutex};
 
 use std::collections::HashMap;
 use std::io;
@@ -144,8 +145,7 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
 }
 
 lazy_static! {
-    // Since it's mutable and shared, use mutext.
-    static ref STATES: Mutex<Vec<Box<dyn Watcher>>> = Mutex::new(vec![]);
+    static ref REGISTRY: Arc<Mutex<Vec<Box<notify::fsevent::FsEventWatcher>>>> = Arc::new(Mutex::new(vec![]));
 }
 
 fn watch(id: String, path: String, opts: Opts) {
@@ -154,7 +154,11 @@ fn watch(id: String, path: String, opts: Opts) {
     thread::spawn(move || {
         let (tx, rx) = channel();
         let mut watcher = watcher(tx, Duration::from_millis(delay_ms)).unwrap();
+        // Need to add watcher (or channel?) to global registry somehow...
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
+        //Mutex<Vec<Box<notify::fsevent::FsEventWatcher>>>
+        let mut reg = REGISTRY.lock().unwrap();
+        reg.push(Box::new(watcher));
         loop {
             match rx.recv() {
                 Ok(v) => {
