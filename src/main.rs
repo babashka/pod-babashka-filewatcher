@@ -225,6 +225,13 @@ fn handle_incoming(val: bc::Value) {
 fn main() {
 
     loop {
+
+        {
+            let mut reg = REGISTRY.lock().unwrap();
+            let mut watcher = reg.get_mut(0);
+            watcher.map(|watcher| eprintln!("dude: {:?}", watcher.watch("/tmp", RecursiveMode::NonRecursive)));
+        }
+
         let mut reader = BufReader::new(io::stdin());
         let val = bc::parse_bencode(&mut reader);
         match val {
