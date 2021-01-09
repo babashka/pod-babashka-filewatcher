@@ -145,7 +145,7 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
 }
 
 lazy_static! {
-    static ref REGISTRY: Arc<Mutex<Vec<Box<notify::fsevent::FsEventWatcher>>>> = Arc::new(Mutex::new(vec![]));
+    static ref REGISTRY: Arc<Mutex<Vec<Box<notify::RecommendedWatcher>>>> = Arc::new(Mutex::new(vec![]));
 }
 
 fn watch(id: String, path: String, opts: Opts) {
