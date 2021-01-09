@@ -31,10 +31,6 @@ jobs:
             sudo apt install adoptopenjdk-8-hotspot -y
             sudo script/install-clojure /usr/local
       - run:
-          name: Install Rust
-          command: |
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
-      - run:
           name: Build binary
           command: |
             cargo build --release
@@ -75,7 +71,9 @@ jobs:
       - run:
           name: Install rustup
           command: |
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
+            curl https://sh.rustup.rs -sSf -o install.sh
+            chmod +x install.sh
+            ./install.sh -y
       - run:
           name: Install Clojure
           command: |
