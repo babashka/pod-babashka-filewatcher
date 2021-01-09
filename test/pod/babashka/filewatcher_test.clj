@@ -9,7 +9,10 @@
 (require '[pod.babashka.filewatcher :as fw])
 
 (deftest filewatcher-test
-  (let [tmp-dir (java.nio.file.Files/createTempDirectory "watch-1")
+  (let [tmp-dir (.toFile
+                 (java.nio.file.Files/createTempDirectory
+                  "watch-1"
+                  (into-array java.nio.file.attribute.FileAttribute [])))
         chan (async/chan)
         cb (fn [result]
              ;; (prn :result-fw result)
@@ -28,12 +31,16 @@
           (let [event (async/<!! chan)]
             (recur (rest actions)
                    (conj events event))))
-        (do (is (every? #(str/ends-with? % "foo.txt")
-                        (map :path events)))
+        (do nil ;; (run! prn events)
+            (is (= 3 (count (filter #(str/ends-with? % "foo.txt")
+                                    (map :path events)))))
             (prn :end-filewatcher-test))))))
 
 (deftest filewatcher-opts-test
-  (let [tmp-dir (java.nio.file.Files/createTempDirectory "watch-2")
+  (let [tmp-dir (.toFile
+                 (java.nio.file.Files/createTempDirectory
+                  "watch-2"
+                  (into-array java.nio.file.attribute.FileAttribute [])))
         chan (async/chan)
         cb (fn [result]
              ;; (prn :result-opts result)
