@@ -156,7 +156,11 @@ fn watch(id: String, path: String, opts: Opts) {
         let mut watcher = watcher(tx, Duration::from_millis(delay_ms)).unwrap();
         // TODO: better error handling, e.g. permission denied
         watcher.watch(&path, RecursiveMode::Recursive).unwrap();
-        REGISTRY.lock().unwrap().push(watcher);
+        let mut reg = REGISTRY.lock().unwrap();
+        reg.push(watcher);
+        // eprintln!("watchers: {}", reg.len());
+        // release lock:
+        drop(reg);
         loop {
             match rx.recv() {
                 Ok(v) => {
@@ -224,7 +228,7 @@ fn main() {
 
         {
             let mut reg = REGISTRY.lock().unwrap();
-            let watcher = reg.get_mut(0);
+            let mut watcher = reg.get_mut(0);
             watcher.map(|watcher| eprintln!("dude: {:?}", watcher.watch("/tmp", RecursiveMode::NonRecursive)));
         }
 
