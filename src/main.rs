@@ -12,7 +12,7 @@ use std::time::Duration;
 #[macro_use]
 extern crate lazy_static;
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Mutex};
 
 use std::collections::HashMap;
 use std::io;
@@ -145,7 +145,7 @@ fn write_path_change(id: &str, _path: &str, event: DebouncedEvent) {
 }
 
 lazy_static! {
-    static ref REGISTRY: Arc<Mutex<Vec<notify::RecommendedWatcher>>> = Arc::new(Mutex::new(vec![]));
+    static ref REGISTRY: Mutex<Vec<notify::RecommendedWatcher>> = Mutex::new(vec![]);
 }
 
 fn watch(id: String, path: String, opts: Opts) {
